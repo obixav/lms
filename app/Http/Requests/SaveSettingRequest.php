@@ -25,11 +25,8 @@ class SaveSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'store_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email'],
-            'phone' => ['required', 'string'],
-            'copyright' => ['required', 'string'],
-            'tax_rate' => ['required', 'numeric'],
+            'company_name' => ['required', 'string', 'max:255'],
+
         ];
     }
 

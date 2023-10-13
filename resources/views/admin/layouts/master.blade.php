@@ -1,3 +1,6 @@
+@php
+    $company=company_info();
+@endphp
 <!DOCTYPE html>
 <html lang="zxx" class="js">
 
@@ -14,6 +17,7 @@
     <!-- StyleSheets  -->
     <link rel="stylesheet" href="./admin_assets/css/dashlite.css?ver=3.2.0">
     <link id="skin-default" rel="stylesheet" href="./admin_assets/css/theme.css?ver=3.2.0">
+    <link id="skin-theme" rel="stylesheet" href="./admin_assets/css/skins/theme-green.css?ver=3.2.3">
     @yield('stylesheets')
 </head>
 
@@ -182,6 +186,13 @@
                 cache: false,
                 contentType: false,
                 processData: false,
+                statusCode:{
+                    422:function(xhr){
+                        console.log(xhr);
+                        displayValidationError(xhr.responseJSON.errors);
+                        $('button').attr('disabled', false);
+                    }
+                },
                 success: function (data, status, xhr) {
 
                     $('button').attr('disabled', false);
@@ -191,12 +202,14 @@
                         $('.modal').modal('hide');
 
                         if(reload_url){
-                            window.location=data.url;
+                            window.location=reload_url;
                         }
                         return;
                     }else if(data.success==false)
                     {
                         displayValidationError(data.data);
+                    }else if(status===422){
+                        displayValidationError(data.errors);
                     }
                     // displayMessage('error',data)
                 },
@@ -235,7 +248,7 @@
             let list = '';
             $.each(errors, function (index, element) {
                 // toastr.error(element)
-                list += element[0] + '\n';
+                list += element[0] + "<br>";
 
             });
             Swal.fire(

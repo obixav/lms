@@ -14,18 +14,13 @@ return new class extends Migration
         //['store_name','email','address','copyright','phone','facebook','instagram','maintenance_mode']
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('store_name');
-            $table->string('email');
-            $table->text('address');
-            $table->string('copyright');
-            $table->string('phone');
-            $table->string('facebook')->nullable();
-            $table->string('instagram')->nullable();
+            $table->string('company_name')->nullable();
+            $table->text('company_logo')->nullable();
+            $table->text('address')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('default_role')->nullable();
             $table->integer('maintenance_mode')->default(0);
-            $table->decimal('tax_rate',8,2)->default(0);
-            $table->text('big_announcement')->nullable();
-            $table->string('small_announcement')->nullable();
-            $table->string('discount_announcement')->nullable();
             $table->timestamps();
         });
     }

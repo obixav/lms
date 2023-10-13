@@ -17,10 +17,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
 
-        $this->app->bind('cart',function(Application $app) {
-            $session = $app->make(SessionManager::class);
-            return new CartService($session);
-        });
+//        $this->app->bind('cart',function(Application $app) {
+//            $session = $app->make(SessionManager::class);
+//            return new CartService($session);
+//        });
     }
 
     /**

@@ -1,80 +1,51 @@
-@extends('layouts.master')
-@section('content')
-    <!-- Page Banner Start -->
-    <section class="page-banner style-two text-center bgc-lighter pt-70 pb-75">
-        <div class="container">
-            <div class="banner-inner pt-20">
-                <h1 class="page-title wow fadeInUp delay-0-2s">404</h1>
-            </div>
-        </div>
-    </section>
-    <!-- Page Banner End -->
+<!DOCTYPE html>
+<html lang="zxx" class="js">
 
+<head>
+{{--    <base href="">--}}
+    <meta charset="utf-8">
+    <meta name="author" content="Tobe Obiakor">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="leave management system">
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="{{asset('admin_assets/images/favicon.png')}}">
+    <!-- Page Title  -->
+    <title>Error 404 | DashLite Admin Template</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="{{asset('admin_assets/css/dashlite.css?ver=3.2.0')}}">
+    <link id="skin-default" rel="stylesheet" href="{{asset('admin_assets/css/theme.css?ver=3.2.0')}}">
+</head>
 
-    <!-- Error Page Start -->
-    <section class="error-page-area py-130">
-        <div class="container">
-            <div class="error-page-content text-center">
-                <div class="image mb-65 wow fadeInUp delay-0-2s">
-                    <img src="{{asset('assets/images/404.png')}}" alt="404 Erro">
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-lg-9">
-                        <div class="section-title wow fadeInUp delay-0-2s">
-                            <h2><span>Opps!</span> This Page Can’t Be Found</h2>
+<body class="nk-body bg-white npc-default pg-error">
+<div class="nk-app-root">
+    <!-- main @s -->
+    <div class="nk-main ">
+        <!-- wrap @s -->
+        <div class="nk-wrap nk-wrap-nosidebar">
+            <!-- content @s -->
+            <div class="nk-content ">
+                <div class="nk-block nk-block-middle wide-md mx-auto">
+                    <div class="nk-block-content nk-error-ld text-center">
+                        <img class="nk-error-gfx" src="{{asset('admin_assets/images/gfx/error-404.svg')}}" alt="">
+                        <div class="wide-xs mx-auto">
+                            <h3 class="nk-error-title">Oops! Why you’re here?</h3>
+                            <p class="nk-error-text">We are very sorry for inconvenience. It looks like you’re try to access a page that either has been deleted or never existed.</p>
+                            <a href="{{url('dashboard')}}" class="btn btn-lg btn-primary mt-2">Back To Home</a>
                         </div>
                     </div>
-                </div>
-                <a href="{{url('/')}}" class="theme-btn mt-15 wow fadeInUp delay-0-2s">Go To Home <i class="far fa-long-arrow-right"></i></a>
+                </div><!-- .nk-block -->
             </div>
+            <!-- wrap @e -->
         </div>
-    </section>
-    <!-- Error Page End -->
+        <!-- content @e -->
+    </div>
+    <!-- main @e -->
+</div>
+<!-- app-root @e -->
+<!-- JavaScript -->
+<script src="{{asset('admin_assets/js/bundle.js?ver=3.2.0')}}"></script>
+<script src="{{asset('admin_assets/js/scripts.js?ver=3.2.0')}}"></script>
+<!-- select region modal -->
 
 
-    <!-- CTA Area start -->
-    <section class="cta-area bgc-gradient">
-        <div class="row">
-            <div class="col-xl-4">
-                <div class="cta-left-image rel z-1 wow fadeInLeft delay-0-4s">
-                    <img src="assets/images/cta/cta-left.png" alt="CTA Left">
-                    <div class="circle-shapes white-shape no-animation">
-                        <div class="shape-inner">
-                            <span class="dot-one"></span>
-                            <span class="dot-two"></span>
-                            <span class="dot-three"></span>
-                            <span class="dot-four"></span>
-                            <span class="dot-five"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 align-self-center">
-                <div class="cta-content text-white py-55 wow fadeInUp delay-0-2s">
-                    <div class="section-title mb-35">
-                        <span class="sub-title mb-10">Contact With Us</span>
-                        <h2>Need Any Printig For your Business?</h2>
-                    </div>
-                    <a href="projects.html" class="theme-btn">Start Your Projects <i class="far fa-long-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="col-xl-4">
-                <div class="cta-right-image rel z-1 wow fadeInRight delay-0-2s">
-                    <img src="assets/images/cta/cta-right.png" alt="CTA Right">
-                    <div class="circle-shapes white-shape no-animation">
-                        <div class="shape-inner">
-                            <span class="dot-one"></span>
-                            <span class="dot-two"></span>
-                            <span class="dot-three"></span>
-                            <span class="dot-four"></span>
-                            <span class="dot-five"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- CTA Area end -->
-
-
-@endsection
+</html>

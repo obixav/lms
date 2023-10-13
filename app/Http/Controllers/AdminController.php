@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Gender;
+use App\Enums\Role;
 use App\Http\Requests\SaveSettingRequest;
 use App\Models\Customer;
+use App\Models\Grade;
+use App\Models\GradeLeaveType;
+use App\Models\Holiday;
+use App\Models\LeaveSetting;
+use App\Models\LeaveType;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Setting;
 use App\Models\Tag;
+use App\Models\User;
+use App\Models\Workflow;
+use App\Models\WorkflowStage;
 use App\Services\ClientService;
 use App\Services\TeamMemberService;
 use App\Services\ProductService;
@@ -21,216 +32,81 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    function dashboard(Request $request)
-    {
-        $sales=Order::sum('total_payable');
-        $orders_count=Order::count();
-        $customers_count=Customer::count();
-        $products_count=Product::count();
-       $product_categories_count=ProductCategory::count();
-         $current_week_sales=Order::whereBetween('created_at',
-            [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
-        )->sum('total_payable');
-        $last_week_sales=Order::whereBetween('created_at',
-            [Carbon::now()->subMonth()->startOfWeek(), Carbon::now()->subMonth()->endOfWeek()]
-        )->sum('total_payable');
-        $week_percentage_difference=$current_week_sales>0?(($current_week_sales-$last_week_sales)/$current_week_sales)*100:-100;
 
-        $current_week_average_sales=Order::whereBetween('created_at',
-            [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
-        )->avg('total_payable');
-        $last_30_days_sales = Order::where('created_at','>=',Carbon::now()->subdays(30))->sum('total_payable');
-       $top_products=DB::table('order_lines')
-           ->selectRaw('sum(order_lines.quantity) as number_of_orders,sum(order_lines.total) as sum_total, product_id, products.name as name,
-           products.price as price')
-           ->join('products','order_lines.product_id','products.id')
-           ->groupBy('product_id','products.name','products.price')
-           ->orderByDesc('sum_total');
-          if($request->product_time=='weekly')
-          {
-              $top_products->whereBetween('order_lines.created_at',
-              [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
-          );
-          }
-        if($request->product_time=='monthly')
-        {
-            $top_products->whereBetween('order_lines.created_at',
-                [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]
-            );
-        }
-        if($request->product_time=='daily')
-        {
-            $top_products->where('order_lines.created_at',Carbon::now());
-        }
-
-          $top_products=$top_products->limit(5)
-           ->get();
-        $last_five_orders=Order::orderByDesc('id')->limit(5)->get();
-        return view('admin.dashboard',compact('sales','orders_count','current_week_sales',
-        'current_week_average_sales','last_30_days_sales','top_products','last_five_orders','week_percentage_difference',
-            'last_week_sales','customers_count','products_count','product_categories_count'));
-    }
     function settings(Request $request, SettingService $settingService)
     {
-        // return view('admin.settings.index');
-        return $settingService->viewSetting();
+        $setting=Setting::first();
+        $roles=Role::cases();
+        return view('admin.settings.index',compact('setting','roles'));
     }
-
     function saveSettings(SaveSettingRequest $saveSettingRequest, SettingService $settingService)
     {
-       return $settingService->saveSetting($saveSettingRequest);
+        return $settingService->saveSetting($saveSettingRequest);
     }
-
-    function products(Request $request, ProductService $productService) {
-        return $productService->viewProducts($request);
-
-    }
-
-    public function editProduct(Request $request,ProductService $productService,$product_id)
+    function workflows(Request $request, SettingService $settingService)
     {
-        return $productService->editProduct($product_id);
+        $workflows=Workflow::all();
+        $roles=Role::cases();
+        $users=User::where('status','!=',2)->get();
+        $managers=User::where('role','!=','employee')->where('status','!=',2)->select(DB::raw("CONCAT(first_name,' ',last_name) AS fullname"),'id' )->get();
+        return view('admin.settings.workflows',compact('workflows','roles','users','managers'));
     }
-    function productCategories(Request $request, ProductService $productService) {
-        return $productService->viewProductcategories();
-
-    }
-    function saveProductCategories(Request $request, ProductService $productService) {
-        return $productService->saveProductCategory($request);
-
-    }
-    function saveProducts(Request $request, ProductService $productService) {
-        return $productService->saveProduct($request);
-
-    }
-    function deleteProduct(Request $request, ProductService $productService,$product_id) {
-        return $productService->deleteProduct($product_id);
-
-    }
-    function updateProducts(Request $request, ProductService $productService) {
-        return $productService->updateProduct($request);
-
-    }
-
-    function projectCategories(Request $request, ProjectService $projectService) {
-        return $projectService->viewProjectcategories();
-
-    }
-    function saveProjectCategories(Request $request, ProjectService $projectService) {
-        return $projectService->saveProjectCategory($request);
-
-    }
-    function projects(Request $request, ProjectService $projectService) {
-        return $projectService->viewProjects($request);
-
-    }
-    public function editProject(Request $request, ProjectService $projectService, $project_id)
+    function saveWorkflows(Request $request, SettingService $settingService)
     {
-        return $projectService->editProject($project_id);
+        return $settingService->saveWorkflow($request);
     }
-    function saveProjects(Request $request, ProjectService $projectService) {
-        return $projectService->saveProject($request);
 
-    }
-    function deleteProject(Request $request, ProjectService $projectService, $project_id) {
-        return $projectService->deleteProject($project_id);
 
-    }
-    function updateProjects(Request $request, ProjectService $projectService) {
-        return $projectService->updateProject($request);
-
-    }
-    //
-
-    function services(Request $request, ServiceService $serviceService) {
-        return $serviceService->viewServices($request);
-
-    }
-    public function editService(Request $request, ServiceService $serviceService, $service_id)
+    public function leaveSettings()
     {
-        return $serviceService->editService($service_id);
+        $workflows=Workflow::all();
+        $leave_types=LeaveType::all();
+        $leave_setting=LeaveSetting::first();
+        return view('admin.settings.leave_settings',compact('leave_setting','workflows','leave_types'));
     }
-    function saveServices(Request $request, ServiceService $serviceService) {
-        return $serviceService->saveService($request);
-
-    }
-    function deleteService(Request $request, ServiceService $serviceService, $service_id) {
-        return $serviceService->deleteService($service_id);
-
-    }
-    function updateServices(Request $request, ServiceService $serviceService) {
-        return $serviceService->updateService($request);
-
-    }
-//
-    function clients(Request $request, ClientService $clientService) {
-        return $clientService->viewClients($request);
-
-    }
-    public function editClient(Request $request, ClientService $clientService, $client_id)
+    function saveLeaveSettings(Request $request, SettingService $settingService)
     {
-        return $clientService->editClient($client_id);
+        return $settingService->saveLeaveSetting($request);
     }
-    function saveClients(Request $request, ClientService $clientService) {
-        return $clientService->saveClient($request);
 
-    }
-    function deleteClient(Request $request, ClientService $clientService, $client_id) {
-        return $clientService->deleteClient($client_id);
-
-    }
-    function updateClients(Request $request, ClientService $clientService) {
-        return $clientService->updateClient($request);
-
-    }
-    function designRequests(Request $request, ProjectService $projectService) {
-        return $projectService->viewDesignRequests($request);
-
-    }
-    function saveDesignRequests(Request $request, ProjectService $projectService) {
-        return $projectService->saveDesignRequestResponse($request);
-
-    }
-    function viewDesignRequest(Request $request, ProjectService $projectService,$design_request_id) {
-        return $projectService->viewDesignRequest($design_request_id);
-
-    }
-    function customers(Request $request) {
-        $customers=Customer::where('id','!=',0);
-        if($request->filled('q'))
-        {
-            $q = $request->input('q');
-
-            $customers->where(function ($query) use ($q) {
-                $query->where('name', 'like', '%' . $q . '%')
-                    ->where('email', 'like', '%' . $q . '%')
-                    ->orWhere('phone', $q);
-            });
-        }
-        $customers=$customers->get();
-        return view('admin.customers.index',compact('customers'));
-
-    }
-    //
-    function team_members(Request $request, TeamMemberService $TeamMemberService) {
-        return $TeamMemberService->viewTeamMembers($request);
-
-    }
-    public function editTeamMember(Request $request, TeamMemberService $TeamMemberService, $team_member_id)
+    public function holidays()
     {
-        return $TeamMemberService->editTeamMember($team_member_id);
+        $holidays=Holiday::all();
+        $leave_setting=LeaveSetting::first();
+        return view('admin.settings.holidays',compact('holidays','leave_setting'));
     }
-    function saveTeamMembers(Request $request, TeamMemberService $TeamMemberService) {
-        return $TeamMemberService->saveTeamMember($request);
+    function saveHolidays(Request $request, SettingService $settingService)
+    {
+        return $settingService->saveHoliday($request);
+    }
 
+    public function leaveTypes()
+    {
+        $leave_types=LeaveType::all();
+        $genders=Gender::cases();
+        return view('admin.settings.leave_types',compact('leave_types','genders'));
     }
-    function deleteTeamMember(Request $request, TeamMemberService $TeamMemberService, $team_member_id) {
-        return $TeamMemberService->deleteTeamMember($team_member_id);
+    function saveLeaveTypes(Request $request, SettingService $settingService)
+    {
+        return $settingService->saveLeaveType($request);
+    }
+    function saveGradeLeaveTypes(Request $request, SettingService $settingService)
+    {
+        return $settingService->saveGradeLeaveType($request);
+    }
+    public function grades()
+    {
+        $grades=Grade::all();
+        $leave_types=LeaveType::all();
+        $grade_leave_types=GradeLeaveType::all();
+        return view('admin.settings.grades',compact('grades','grade_leave_types','leave_types'));
+    }
+    function saveGrades(Request $request, SettingService $settingService)
+    {
+        return $settingService->saveGrade($request);
+    }
 
-    }
-    function updateTeamMembers(Request $request, TeamMemberService $TeamMemberService) {
-        return $TeamMemberService->updateTeamMember($request);
 
-    }
 
     function tagSearch(Request $request)
     {

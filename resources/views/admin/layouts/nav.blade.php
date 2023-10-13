@@ -1,10 +1,10 @@
-<div class="nk-sidebar nk-sidebar-fixed is-light " data-content="sidebarMenu">
-    <div class="nk-sidebar-element nk-sidebar-head">
+<div class="nk-sidebar nk-sidebar-fixed is-theme " data-content="sidebarMenu">
+    <div class="nk-sidebar-element nk-sidebar-head" style="background: #ffffff">
         <div class="nk-sidebar-brand">
-            <a href="html/index.html" class="logo-link nk-sidebar-logo">
+            <a href="{{url('dashboard')}}" class="logo-link nk-sidebar-logo">
+
+
                 <img class="logo-light logo-img" src="./admin_assets/images/logo.png" srcset="./admin_assets/images/logo2x.png 2x" alt="logo">
-                <img class="logo-dark logo-img" src="./admin_assets/images/logo-dark.png" srcset="./admin_assets/images/logo-dark2x.png 2x" alt="logo-dark">
-                <img class="logo-small logo-img logo-img-small" src="./admin_assets/images/logo-small.png" srcset="./admin_assets/images/logo-small2x.png 2x" alt="logo-small">
             </a>
         </div>
         <div class="nk-menu-trigger me-n2">
@@ -17,80 +17,55 @@
             <div class="nk-sidebar-menu" data-simplebar>
                 <ul class="nk-menu">
                     <li class="nk-menu-item">
-                        <a href="{{url('admin/dashboard')}}" class="nk-menu-link">
+                        <a href="{{url('dashboard')}}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-dashboard-fill"></em></span>
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li><!-- .nk-menu-item -->
+                    @if(auth()->user()->role=='admin')
                     <li class="nk-menu-item">
-                        <a href="{{url('admin/orders')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-bag-fill"></em></span>
-                            <span class="nk-menu-text">Orders</span>
+                        <a href="{{url('employees')}}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-users-fill"></em></span>
+                            <span class="nk-menu-text">Employees</span>
                         </a>
                     </li><!-- .nk-menu-item -->
+                    @endif
+                    @if(auth()->user()->role=='admin' || auth()->user()->role=='manager')
+                    <li class="nk-menu-item">
+                        <a href="{{url('leave_approvals')}}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-calendar-check-fill"></em></span>
+                            <span class="nk-menu-text">Leave Approvals</span>
+                        </a>
+                    </li><!-- .nk-menu-item -->
+                        <li class="nk-menu-item">
+                            <a href="{{url('leave_cancellation_approvals')}}" class="nk-menu-link">
+                                <span class="nk-menu-icon"><em class="icon ni ni-calendar-check-fill"></em></span>
+                                <span class="nk-menu-text">Leave Cancellation Approvals</span>
+                            </a>
+                        </li><!-- .nk-menu-item -->
+                    @endif
 {{--                    layers-fill--}}
                     <li class="nk-menu-item">
-                        <a href="{{route('admin.products')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-package-fill"></em></span>
-                            <span class="nk-menu-text">Products</span>
-                        </a>
-                    </li><!-- .nk-menu-item -->
-                    <li class="nk-menu-item">
-                        <a href="{{route('admin.product_categories')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-package"></em></span>
-                            <span class="nk-menu-text">Product Categories</span>
-                        </a>
-                    </li><!-- .nk-menu-item -->
-                    <li class="nk-menu-item">
-                        <a href="{{route('admin.projects')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-layer-fill"></em></span>
-                            <span class="nk-menu-text">Projects</span>
-                        </a>
-                    </li><!-- .nk-menu-item -->
-                    <li class="nk-menu-item">
-                        <a href="{{route('admin.project_categories')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-layers-fill"></em></span>
-                            <span class="nk-menu-text">Project Categories</span>
-                        </a>
-                    </li><!-- .nk-menu-item -->
-                    <li class="nk-menu-item">
-                        <a href="{{route('admin.services')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-layer-fill"></em></span>
-                            <span class="nk-menu-text">Services</span>
+                        <a href="{{url('settings')}}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-user-switch-fill"></em></span>
+                            <span class="nk-menu-text">Replacement Requests</span>
                         </a>
                     </li><!-- .nk-menu-item -->
 
                     <li class="nk-menu-item">
-                        <a href="{{route('admin.clients')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-layer-fill"></em></span>
-                            <span class="nk-menu-text">Clients</span>
+                        <a href="{{url('my_leave_requests/')}}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-calendar-booking-fill"></em></span>
+                            <span class="nk-menu-text">My Leave Requests</span>
                         </a>
                     </li><!-- .nk-menu-item -->
-
+                    @if(auth()->user()->role=='admin')
                     <li class="nk-menu-item">
-                        <a href="{{route('admin.customers')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-users-fill"></em></span>
-                            <span class="nk-menu-text">Customers</span>
-                        </a>
-                    </li><!-- .nk-menu-item -->
-                    <li class="nk-menu-item">
-                        <a href="{{route('admin.design_requests')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-users-fill"></em></span>
-                            <span class="nk-menu-text">Design requests</span>
-                        </a>
-                    </li><!-- .nk-menu-item -->
-                    <li class="nk-menu-item">
-                        <a href="{{route('admin.team_members')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-users-fill"></em></span>
-                            <span class="nk-menu-text">Team Member</span>
-                        </a>
-                    </li><!-- .nk-menu-item -->
-                    <li class="nk-menu-item">
-                        <a href="{{route('admin.settings')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-opt-alt-fill"></em></span>
+                        <a href="{{url('settings')}}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-setting-fill"></em></span>
                             <span class="nk-menu-text">Settings</span>
                         </a>
                     </li><!-- .nk-menu-item -->
+                    @endif
 
 
                 </ul><!-- .nk-menu -->

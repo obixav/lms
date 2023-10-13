@@ -9,7 +9,7 @@ $company=company_info();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{$company->store_name}}</title>
+    <title>{{$company->company_name}}</title>
 {{--    <link rel=icon href="{{asset('assets/images/favicon.png')}}" sizes="20x20" type="image/png">--}}
 
     <!-- Stylesheet -->
@@ -22,7 +22,7 @@ $company=company_info();
     <link rel="stylesheet" href="{{asset('assets/css/flaticon.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/slick.min.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css">
-    @livewireStyles
+
     @yield('stylesheets')
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
 </head>
@@ -206,7 +206,7 @@ $company=company_info();
             $(".shopping-cart").stop(true, true).removeClass("active");
         });
     </script>
-    @livewireScripts
+
 
 
 </body>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,8 +19,21 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'phone',
         'email',
+        'address',
+        'role',
+        'grade_id',
+        'staff_id',
+        'manager_id',
+        'hiredate',
+        'dob',
+        'gender',
+        'status',
+        'last_login',
+        'last_login_ip',
         'password',
     ];
 
@@ -42,4 +56,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getNameAttribute()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class,'grade_id');
+    }
+    public function manager()
+    {
+        return $this->belongsTo(User::class,'manager_id');
+    }
 }
