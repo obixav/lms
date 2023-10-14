@@ -57,7 +57,7 @@
 
                                     </div>
                                     <div class="form-control-wrap">
-                                        <input autocomplete="off" name="email" type="text" class="form-control form-control-lg" required id="email-address" placeholder="Enter your email or Staff Id">
+                                        <input autocomplete="off" name="login" type="text" class="form-control form-control-lg" required id="email-address" placeholder="Enter your email or Staff Id">
                                     </div>
                                 </div><!-- .form-group -->
                                 <div class="form-group">
