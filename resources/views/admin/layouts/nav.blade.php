@@ -4,7 +4,7 @@
             <a href="{{url('dashboard')}}" class="logo-link nk-sidebar-logo">
 
 
-                <img class="logo-light logo-img" src="./admin_assets/images/logo.png" srcset="./admin_assets/images/logo2x.png 2x" alt="logo">
+                <img class="logo-light logo-img" src="{{asset('admin_assets/images/logo.png')}}" srcset="{{asset('admin_assets/images/logo.png')}} 2x" alt="logo">
             </a>
         </div>
         <div class="nk-menu-trigger me-n2">
